@@ -1538,6 +1538,7 @@ def finalize_installation(tool):
             dylib = 'OFF'
         if tool == 'pythia8' or dylib == 'OFF':
             all_lib = [lib for lib in all_lib if not any(lib.endswith(ext) for ext in ['.so','.la','.dylib'])]
+            all_lib = [lib for lib in all_lib if not False] # TODO: drop symlinks!!!!!!
 
     
     for path in all_bin:
