@@ -1538,9 +1538,9 @@ def finalize_installation(tool):
             dylib = 'OFF'
         if tool == 'pythia8' or dylib == 'OFF':
             all_lib = [lib for lib in all_lib if not any(lib.endswith(ext) for ext in ['.so','.la','.dylib'])]
-            all_lib = [lib for lib in all_lib if not False] # TODO: drop symlinks!!!!!!
 
-    
+    all_lib = [lib for lib in all_lib if not os.path.islink(path)]
+
     for path in all_bin:
         if os.path.islink(pjoin(_prefix,'bin',os.path.basename(path))):
             os.remove(pjoin(_prefix,'bin',os.path.basename(path)))
@@ -1551,7 +1551,7 @@ def finalize_installation(tool):
             os.remove(pjoin(_prefix,'include',os.path.basename(path)))
         os.symlink(os.path.relpath(path,pjoin(_prefix,'include')),
                                pjoin(_prefix,'include',os.path.basename(path)))
-    for path in all_lib: 
+    for path in all_lib:
         if os.path.islink(pjoin(_prefix,'lib',os.path.basename(path))):
             os.remove(pjoin(_prefix,'lib',os.path.basename(path)))
         os.symlink(os.path.relpath(path,pjoin(_prefix,'lib')),
@@ -1673,7 +1673,7 @@ def find_dependency(tool):
                     else:
                        continue
                     # found the include path
-                    incfound = p
+                    incfound = pUpdate 
                     if 'lib' in os.listdir(pjoin(incfound, os.path.pardir)):
                        return os.path.abspath(pjoin(incfound, os.path.pardir))
                     elif 'lib' in os.listdir(pjoin(incfound, os.path.pardir, os.path.pardir)):
